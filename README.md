@@ -10,7 +10,9 @@ The model pipeline leverages the **UCI Steel Plates Faults Dataset**.
 * **Feature Attributes:** 27 structural continuous variables (e.g., coordinates `X_Minimum`, surface parameter `Pixels_Areas`, luminous metrics `Luminosity_Index`, etc.)
 * **Targets Evaluated:** Multi-class classification target synthesized out of 7 categories: `Pastry`, `Z_Scratch`, `K_Scratch`, `Stains`, `Dirtiness`, `Bumps`, and `Other_Faults`.
 
-## c. GitHub Repository Link
+## c. Links
+[Streamlit app link](https://mlassignmentclassificationofsteelplatefaults-6olzgo63kfebptfjz.streamlit.app/)
+
 [Github repository link](https://github.com/YogitaGarani/ML_Assignment_Classification_of_steel_plate_faults)
 
 ## d. Models Used & Evaluation Comparison
