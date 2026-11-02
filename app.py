@@ -62,9 +62,6 @@ selected_model_name = st.sidebar.selectbox("Pipeline Architecture", model_option
 # ===============
 # MAIN INTERFACE
 # ===============
-# ==========================================
-# FILE INGESTION VALIDATION CORES
-# ==========================================
 if uploaded_file is not None:
     # Validation Check 1: File Extension Validation via Streamlit Uploader
     if not uploaded_file.name.lower().endswith('.csv'):
@@ -119,68 +116,70 @@ if uploaded_file is not None:
 
 
 
-        scaler_path = "model/scaler.joblib"
-        model_path = f"model/{selected_model_name}.joblib"
+            scaler_path = "model/scaler.joblib"
+            model_path = f"model/{selected_model_name}.joblib"
 
-        if not os.path.exists(scaler_path) or not os.path.exists(model_path):
-            st.error(f"Deployment Mismatch: The requested artifacts (`scaler.joblib` or `{selected_model_name}.joblib`) were not located within the local production workspace paths.")
-        else:
-            # Inference
-            scaler = joblib.load(scaler_path)
-            model = joblib.load(model_path)
+            if not os.path.exists(scaler_path) or not os.path.exists(model_path):
+                st.error(f"Deployment Mismatch: The requested artifacts (`scaler.joblib` or `{selected_model_name}.joblib`) were not located within the local production workspace paths.")
+            else:
+                # Inference
+                scaler = joblib.load(scaler_path)
+                model = joblib.load(model_path)
 
-            X_eval_scaled = scaler.transform(X_eval)
-            y_pred = model.predict(X_eval_scaled)
-            y_prob = model.predict_proba(X_eval_scaled)
+                X_eval_scaled = scaler.transform(X_eval)
+                y_pred = model.predict(X_eval_scaled)
+                y_prob = model.predict_proba(X_eval_scaled)
 
-            # Performance
-            acc = accuracy_score(y_true, y_pred)
-            prec = precision_score(y_true, y_pred, average='macro', zero_division=0)
-            rec = recall_score(y_true, y_pred, average='macro', zero_division=0)
-            f1 = f1_score(y_true, y_pred, average='macro', zero_division=0)
-            auc = roc_auc_score(y_true, y_prob, multi_class='ovr', average='macro')
-            mcc = matthews_corrcoef(y_true, y_pred)
+                # Performance
+                acc = accuracy_score(y_true, y_pred)
+                prec = precision_score(y_true, y_pred, average='macro', zero_division=0)
+                rec = recall_score(y_true, y_pred, average='macro', zero_division=0)
+                f1 = f1_score(y_true, y_pred, average='macro', zero_division=0)
+                auc = roc_auc_score(y_true, y_prob, multi_class='ovr', average='macro')
+                mcc = matthews_corrcoef(y_true, y_pred)
 
-            st.markdown(f"<div class='panel-section-header'>📊 Multi-Class Performance Report: {selected_model_name.replace('_', ' ')}</div>", unsafe_allow_html=True)
+                st.markdown(f"<div class='panel-section-header'>📊 Multi-Class Performance Report: {selected_model_name.replace('_', ' ')}</div>", unsafe_allow_html=True)
 
-            c1, col_divider, c2, col_divider2, c3, col_divider3, c4, col_divider4, c5, col_divider5, c6 = st.columns([1, 0.05, 1, 0.05, 1, 0.05, 1, 0.05, 1, 0.05, 1])
-            with c1: st.markdown(f"<div class='kpi-card'><small style='color:#6B7280; font-weight:600;'>ACCURACY</small><h2>{acc:.4f}</h2></div>", unsafe_allow_html=True)
-            with c2: st.markdown(f"<div class='kpi-card'><small style='color:#6B7280; font-weight:600;'>ROC-AUC SCORE</small><h2>{auc:.4f}</h2></div>", unsafe_allow_html=True)
-            with c3: st.markdown(f"<div class='kpi-card'><small style='color:#6B7280; font-weight:600;'>PRECISION (MACRO)</small><h2>{prec:.4f}</h2></div>", unsafe_allow_html=True)
-            with c4: st.markdown(f"<div class='kpi-card'><small style='color:#6B7280; font-weight:600;'>RECALL (MACRO)</small><h2>{rec:.4f}</h2></div>", unsafe_allow_html=True)
-            with c5: st.markdown(f"<div class='kpi-card'><small style='color:#6B7280; font-weight:600;'>F1-SCORE (MACRO)</small><h2>{f1:.4f}</h2></div>", unsafe_allow_html=True)
-            with c6: st.markdown(f"<div class='kpi-card'><small style='color:#6B7280; font-weight:600;'>MCC COEFFICIENT</small><h2>{mcc:.4f}</h2></div>", unsafe_allow_html=True)
+                c1, col_divider, c2, col_divider2, c3, col_divider3, c4, col_divider4, c5, col_divider5, c6 = st.columns([1, 0.05, 1, 0.05, 1, 0.05, 1, 0.05, 1, 0.05, 1])
+                with c1: st.markdown(f"<div class='kpi-card'><small style='color:#6B7280; font-weight:600;'>ACCURACY</small><h2>{acc:.4f}</h2></div>", unsafe_allow_html=True)
+                with c2: st.markdown(f"<div class='kpi-card'><small style='color:#6B7280; font-weight:600;'>ROC-AUC SCORE</small><h2>{auc:.4f}</h2></div>", unsafe_allow_html=True)
+                with c3: st.markdown(f"<div class='kpi-card'><small style='color:#6B7280; font-weight:600;'>PRECISION (MACRO)</small><h2>{prec:.4f}</h2></div>", unsafe_allow_html=True)
+                with c4: st.markdown(f"<div class='kpi-card'><small style='color:#6B7280; font-weight:600;'>RECALL (MACRO)</small><h2>{rec:.4f}</h2></div>", unsafe_allow_html=True)
+                with c5: st.markdown(f"<div class='kpi-card'><small style='color:#6B7280; font-weight:600;'>F1-SCORE (MACRO)</small><h2>{f1:.4f}</h2></div>", unsafe_allow_html=True)
+                with c6: st.markdown(f"<div class='kpi-card'><small style='color:#6B7280; font-weight:600;'>MCC COEFFICIENT</small><h2>{mcc:.4f}</h2></div>", unsafe_allow_html=True)
 
-            st.markdown("<div class='panel-section-header'>📋 Deep-Dive Error Diagnostics & Breakdown</div>", unsafe_allow_html=True)
-            layout_left, space, layout_right = st.columns([1.1, 0.1, 1.1])
+                st.markdown("<div class='panel-section-header'>📋 Deep-Dive Error Diagnostics & Breakdown</div>", unsafe_allow_html=True)
+                layout_left, space, layout_right = st.columns([1.1, 0.1, 1.1])
 
-            with layout_left:
-                st.markdown("<p style='font-weight:600; color: var(--text-color); margin-bottom: 25px;'>Confusion Heatmap</p>", unsafe_allow_html=True)
+                with layout_left:
+                    st.markdown("<p style='font-weight:600; color: var(--text-color); margin-bottom: 25px;'>Confusion Heatmap</p>", unsafe_allow_html=True)
                 
-                cm = confusion_matrix(y_true, y_pred)
-                fig, ax = plt.subplots(figsize=(6.5, 4.2))
-                sns.heatmap(cm, annot=True, fmt="d", cmap="Blues",
+                    cm = confusion_matrix(y_true, y_pred)
+                    fig, ax = plt.subplots(figsize=(6.5, 4.2))
+                    sns.heatmap(cm, annot=True, fmt="d", cmap="Blues",
                             xticklabels=target_labels, yticklabels=target_labels, ax=ax, cbar=False)
                 
-                ax.set_ylabel("Truth Values", fontweight='bold', color='#374151')
-                ax.set_xlabel("Model Predictions", fontweight='bold', color='#374151')
+                    ax.set_ylabel("Truth Values", fontweight='bold', color='#374151')
+                    ax.set_xlabel("Model Predictions", fontweight='bold', color='#374151')
                 
-                plt.tight_layout()
+                    plt.tight_layout()
                 
-                fig.patch.set_facecolor('#F8FAFC')
-                st.pyplot(fig)
+                    fig.patch.set_facecolor('#F8FAFC')
+                    st.pyplot(fig)
 
 
 
-            with layout_right:
-                st.markdown("<p style='font-weight:600; color: var(--text-color); margin-bottom: 25px;'>Classification Report</p>", unsafe_allow_html=True)
+                with layout_right:
+                    st.markdown("<p style='font-weight:600; color: var(--text-color); margin-bottom: 25px;'>Classification Report</p>", unsafe_allow_html=True)
                 
-                report_dict = classification_report(y_true, y_pred, target_names=target_labels, output_dict=True)
-                report_df = pd.DataFrame(report_dict).transpose()
+                    report_dict = classification_report(y_true, y_pred, target_names=target_labels, output_dict=True)
+                    report_df = pd.DataFrame(report_dict).transpose()
                 
-                st.dataframe(report_df.style.format(precision=4), use_container_width=True)
+                    st.dataframe(report_df.style.format(precision=4), use_container_width=True)
 
-
+        
+        except Exception as e:
+            st.error(f"🚨 Critical Parsing Fault: An error occurred while attempting to process the sheet matrix structure. Error details: {e}")
 else:
     st.markdown("<br><br>", unsafe_allow_html=True)
     st.info("💡 Awaiting structural configuration file payload. Please feed or upload a valid csv file with steel pipeline surface data to analyse anomalies")
