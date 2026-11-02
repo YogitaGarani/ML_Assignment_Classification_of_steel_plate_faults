@@ -111,18 +111,25 @@ if uploaded_file is not None:
             layout_left, space, layout_right = st.columns([1.1, 0.1, 1.1])
 
             with layout_left:
-                st.markdown("<p style='font-weight:600; color:#4B5563; margin-bottom:-10px;'>Defect Confusion Heatmap Distribution</p>", unsafe_allow_html=True)
+                st.markdown("<p style='font-weight:600; color: var(--text-color); margin-bottom: 25px;'>Confusion Heatmap</p>", unsafe_allow_html=True)
+                
                 cm = confusion_matrix(y_true, y_pred)
                 fig, ax = plt.subplots(figsize=(6.5, 4.2))
                 sns.heatmap(cm, annot=True, fmt="d", cmap="Blues",
                             xticklabels=target_labels, yticklabels=target_labels, ax=ax, cbar=False)
-                ax.set_ylabel("True Ground Categorization", fontweight='bold', color='#374151')
-                ax.set_xlabel("Pipeline Model Diagnostics", fontweight='bold', color='#374151')
+                
+                ax.set_ylabel("Truth Values", fontweight='bold', color='#374151')
+                ax.set_xlabel("Model Predictions", fontweight='bold', color='#374151')
+                
+                plt.tight_layout()
+                
                 fig.patch.set_facecolor('#F8FAFC')
                 st.pyplot(fig)
 
+
+
             with layout_right:
-                st.markdown("<p style='font-weight:600; color:#4B5563; margin-bottom:10px;'>Granular Classification Index Parameters</p>", unsafe_allow_html=True)
+                st.markdown("<p style='font-weight:600; color:#4B5563; margin-bottom:10px;'>Classification Report</p>", unsafe_allow_html=True)
                 report_dict = classification_report(y_true, y_pred, target_names=target_labels, output_dict=True)
                 report_df = pd.DataFrame(report_dict).transpose()
                 st.dataframe(report_df.style.format(precision=4), use_container_width=True)
