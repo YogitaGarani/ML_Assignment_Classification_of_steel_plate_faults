@@ -62,6 +62,20 @@ selected_model_name = st.sidebar.selectbox("Pipeline Architecture", model_option
 # ===============
 # MAIN INTERFACE
 # ===============
+# ==========================================
+# GLOBAL VARIABLE & MATRIX DEFINITIONS
+# ==========================================
+feature_cols = [
+    'X_Minimum', 'X_Maximum', 'Y_Minimum', 'Y_Maximum', 'Pixels_Areas',
+    'X_Perimeter', 'Y_Perimeter', 'Sum_of_Luminosity', 'Minimum_of_Luminosity',
+    'Maximum_of_Luminosity', 'Length_of_Conveyer', 'TypeOfSteel_A300',
+    'TypeOfSteel_A400', 'Steel_Plate_Thickness', 'Edges_Index', 'Empty_Index',
+    'Square_Index', 'Outside_X_Index', 'Edges_X_Index', 'Edges_Y_Index',
+    'Outside_Global_Index', 'LogOfAreas', 'Log_X_Index', 'Log_Y_Index',
+    'Orientation_Index', 'Luminosity_Index', 'SigmoidOfAreas'
+]
+target_labels = ["Pastry", "Z_Scratch", "K_Scratch", "Stains", "Dirtiness", "Bumps", "Other_Faults"]
+
 if uploaded_file is not None:
     # Validation Check 1: File Extension Validation via Streamlit Uploader
     if not uploaded_file.name.lower().endswith('.csv'):
