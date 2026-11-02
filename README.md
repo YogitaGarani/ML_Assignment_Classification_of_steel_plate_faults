@@ -1,7 +1,8 @@
-# Steel Plates Faults Classification & Deployment (Assignment 2)
+# Steel Plates Faults and Metallurgical Defect Detection System
 
 ## a. Problem Statement
-The objective of this project is to implement an automated predictive modeling pipeline to identify seven distinct types of steel plate manufacturing faults based on 27 geometric and geometric-luminosity parameters. Early detection of defects prevents processing flaws, optimizes product distribution, and establishes reliable quality control.
+This project uses machine learning pipelines to detect and classify surface defects on hot-rolled steel plates. Automated anomaly detection is crucial for manufacturing quality control, minimizing raw material waste, reducing processing downtime, and ensuring structural safety in industrial supply chains.
+The major challenge with this dataset involves a highly imbalanced multiclass classification task: predicting **7 distinct fault types** ('Pastry', 'Z_Scratch', 'K_Scratch', 'Stains', 'Dirtiness', 'Bumps', and 'Other_Faults') using **27 geometric, tracking, topological, and luminescent structural metrics** extracted from digital images of plate surfaces.
 
 ## b. Dataset Description
 The model pipeline leverages the **UCI Steel Plates Faults Dataset**.
@@ -10,23 +11,25 @@ The model pipeline leverages the **UCI Steel Plates Faults Dataset**.
 * **Targets Evaluated:** Multi-class classification target synthesized out of 7 categories: `Pastry`, `Z_Scratch`, `K_Scratch`, `Stains`, `Dirtiness`, `Bumps`, and `Other_Faults`.
 
 ## c. GitHub Repository Link
-[Insert Your Repository Live Hyperlink Here]
+[Github repository link](https://github.com/YogitaGarani/ML_Assignment_Classification_of_steel_plate_faults)
 
 ## d. Models Used & Evaluation Comparison
-The evaluation metrics below were calculated by loading the test data vector splits inside the workspace environment:
+The evaluation metrics below were calculated on the training data vector set:
 
 | ML Model Name | Accuracy | AUC | Precision | Recall | F1 | MCC |
 | :--- | :---: | :---: | :---: | :---: | :---: | :---: |
-| Logistic Regression | 0.7410 | 0.9234 | 0.6954 | 0.6120 | 0.6382 | 0.6721 |
-| Decision Tree | 0.7256 | 0.8210 | 0.6841 | 0.6902 | 0.6865 | 0.6624 |
-| KNN | 0.7513 | 0.9124 | 0.7230 | 0.6315 | 0.6621 | 0.6854 |
-| Naive Bayes | 0.6106 | 0.8842 | 0.5821 | 0.6612 | 0.5720 | 0.5432 |
-| Support Vector Machine | 0.7839 | 0.9412 | 0.7912 | 0.6894 | 0.7241 | 0.7289 |
+| Logistic Regression | 0.7118 | 0.9269 | 0.6901 | 0.7024 | 0.6929 | 0.6328 |
+| Decision Tree | 0.6913 | 0.8997 | 0.6369 | 0.6324 | 0.6290 | 0.6021 |
+| KNN | 0.7376 | 0.9197 | 0.7383 | 0.7755 | 0.7538 | 0.6707 |
+| Naive Bayes | 0.6278 | 0.9135 | 0.6573 | 0.7199 | 0.6539 | 0.5704 |
+| Support Vector Machine | 0.7530 | 0.9453 | 0.7661 | 0.7381 | 0.7484 | 0.6818 |
 
 ### Observations About Model Performance
-* **Logistic Regression:** Shows highly stable learning curves and excellent generalization metrics. Serves as a great baseline but minor underfitting is present due to complex decision bounds.
-* **Decision Tree:** Demonstrates high execution efficiency but displays slightly lower generalized AUC scores compared to ensemble boundaries due to typical splitting variance.
-* **KNN:** Strong grouping ability based on metric distances, but suffers slight latency inflation scaling up against feature counts.
-* **Naive Bayes:** Shows lower overall structural accuracy because it assumes complete independence among all 27 highly correlated spatial geometric variables.
-* **Support Vector Machine:** **Overall Winner for this Dataset**. Captures non-linear dependencies across structural measurements using RBF kernel features, yielding the top F1, AUC, and MCC scores.
-
+| ML Model Name | Observation about model performance |
+| :--- | :--- |
+| **Logistic Regression** | Yields a balanced F1-score (0.6929) and high AUC (0.9269), reflecting stable global boundary definitions. However, its confusion matrix reveals specific errors, frequently misclassifying true rare classes as the majority `Other_Faults` class (Class 6). |
+| **Decision Tree** | Captures non-linear edge patterns relatively well, resulting in an MCC score of 0.6021. However, it displays a tendency to overfit deep leaf branches on noisy parameters like pixel boundaries, causing it to clip minority classes like `Dirtiness` down to a lower true capture rate. |
+| **K-Nearest Neighbors (KNN)** | Demonstrates strong performance with a **Recall score of 0.7755** and an F1-score of 0.7538. By relying on spatial neighborhood boundaries, it accurately isolates minority clusters, making it the most sensitive model for identifying rare structural faults. |
+| **Naive Bayes** | Struggles relative to the other pipelines, registering the lowest global Accuracy (0.6278) and lowest MCC (0.5704). This drop occurs because the assumption of independent conditional distribution breaks down under highly correlated spatial dimensions like bounding coordinates. |
+| **Support Vector Machine (SVM)** | Achieves the highest baseline **Accuracy (0.7530)**, best overall **Precision (0.7661)**, and most reliable discrimination envelope (**0.9453 AUC**). It forms clean decision margins that successfully buffer against class imbalance noise. |
+| **Overall Winner** | **Support Vector Machine (SVM)** emerges as the overall winner. It achieves top scores across Accuracy, AUC, Precision, and MCC. While KNN offers a slightly higher Recall, SVM provides the most balanced and statistically robust decision surface for production deployment. |
