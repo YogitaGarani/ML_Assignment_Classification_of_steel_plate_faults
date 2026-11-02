@@ -62,18 +62,62 @@ selected_model_name = st.sidebar.selectbox("Pipeline Architecture", model_option
 # ===============
 # MAIN INTERFACE
 # ===============
+# ==========================================
+# FILE INGESTION VALIDATION CORES
+# ==========================================
 if uploaded_file is not None:
-    data = pd.read_csv(uploaded_file)
-    st.sidebar.success("✅ Logged telemetry streams successfully.")
-
-    if 'Target' not in data.columns:
-        st.error("Missing Vector Dimension: The loaded dataset requires a 'Target' integer field matching index bounds 0-6 for performance monitoring.")
+    # Validation Check 1: File Extension Validation via Streamlit Uploader
+    if not uploaded_file.name.lower().endswith('.csv'):
+        st.error("🚨 File Format Rejection: Uploaded asset must be an exact `.csv` tabular plain text file split.")
     else:
-        st.markdown("<div class='panel-section-header'>🔬 Preview uploaded data</div>", unsafe_allow_html=True)
-        st.dataframe(data.head(5), use_container_width=True)
+        try:
+            data = pd.read_csv(uploaded_file)
+            
+            # Validation Check 2: Confirm File is Not Completely Empty
+            if data.empty:
+                st.error("🚨 Zero-Width Error: The submitted CSV file contains no readable entries or rows.")
+                st.stop()
+                
+            # Validation Check 3: Check for explicit Ground Truth column
+            if 'Target' not in data.columns:
+                st.error("🚨 Missing Vector Dimension: The loaded dataset requires a 'Target' integer field matching index bounds 0-6 for performance monitoring.")
+                st.stop()
 
-        y_true = data['Target'].values
-        X_eval = data.drop(columns=['Target'])
+            # Validation Check 4: Check if total columns match training parameters (27 features + 1 Target = 28)
+            expected_num_cols = len(feature_cols) + 1  # 28 columns total
+            if data.shape[1] != expected_num_cols:
+                st.error(f"🚨 Structural Dimension Mismatch: Expected exactly {expected_num_cols} columns (27 features + 1 Target). Your file contains {data.shape[1]} columns instead.")
+                st.stop()
+                
+            # Validation Check 5: Verify precise column name mapping matching pipeline expectations
+            input_features_only = data.drop(columns=['Target']).columns.tolist()
+            missing_features = [col for col in feature_cols if col not in input_features_only]
+            if missing_features:
+                st.error(f"🚨 Missing Structural Column Name Attributes: The pipeline could not locate the following required columns: {missing_features}")
+                st.stop()
+
+            # Validation Check 6: Check for any unconvertible strings/text and replace remaining NaNs
+            X_raw = data[feature_cols].copy()
+            for col in X_raw.columns:
+                X_raw[col] = pd.to_numeric(X_raw[col], errors='coerce')
+                
+            if X_raw.isnull().sum().sum() > 0:
+                st.warning("⚠️ Warning: Non-numeric elements or missing blocks detected in input. Missing fields are being populated with feature column median matrix values.")
+                X_raw = X_raw.fillna(X_raw.median())
+
+            # Validation Check 7: Ensure the target class mapping spans valid integer metrics (0 to 6)
+            y_true = pd.to_numeric(data['Target'], errors='coerce').fillna(0).astype(int).values
+            if not np.all((y_true >= 0) & (y_true <= 6)):
+                st.error("🚨 Out-of-Bounds Target: Target index entries must strictly fall between 0 and 6 representing valid fault classes.")
+                st.stop()
+
+            # Pass validations
+            st.sidebar.success("✅ Logged telemetry streams passed validation checks.")
+            st.markdown("<div class='panel-section-header'>🔬 Input Data Preview</div>", unsafe_allow_html=True)
+            st.dataframe(data.head(5), use_container_width=True)
+
+
+
 
         scaler_path = "model/scaler.joblib"
         model_path = f"model/{selected_model_name}.joblib"
