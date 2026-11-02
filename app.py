@@ -13,14 +13,29 @@ from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_sc
 # INTERFACE THEMING & OVERRIDES
 # ==============================
 st.set_page_config(page_title="Industrial Defect Dashboard", layout="wide")
-
 st.markdown("""
 <style>
-    .brand-title { font-size: 2.4rem; font-weight: 800; color: #1E3A8A; letter-spacing: -0.05rem; }
-    .brand-subtitle { font-size: 1.1rem; color: #4B5563; margin-bottom: 2rem; }
-    .panel-section-header { font-size: 1.3rem; font-weight: 700; color: #1F2937; margin-top: 1.5rem; margin-bottom: 0.5rem; border-bottom: 2px solid #E5E7EB; padding-bottom: 0.3rem; }
-    .kpi-card { background-color: #F8FAFC; border-radius: 8px; border: 1px solid #E2E8F0; padding: 1rem; border-top: 4px solid #3B82F6; }
-    .sidebar-branding { font-weight: 700; color: #1E3A8A; font-size: 1.1rem; margin-bottom: 1rem; }
+    .brand-title { font-size: 2.4rem; font-weight: 800; color: var(--text-color); letter-spacing: -0.05rem; }
+    .brand-subtitle { font-size: 1.1rem; color: var(--text-color); opacity: 0.8; margin-bottom: 2rem; }
+    
+    .panel-section-header { font-size: 1.3rem; font-weight: 700; color: var(--text-color); margin-top: 1.5rem; margin-bottom: 0.5rem; border-bottom: 2px solid var(--secondary-background-color); padding-bottom: 0.3rem; }
+    
+    .kpi-card { 
+        background-color: var(--secondary-background-color); 
+        border-radius: 8px; 
+        border: 1px solid var(--secondary-background-color); 
+        padding: 1rem; 
+        border-top: 4px solid #3B82F6;
+    }
+    
+    .kpi-card h2 {
+        color: var(--text-color) !important;
+        margin: 0 !important;
+        padding-top: 0.3rem !important;
+        font-size: 1.8rem !important;
+    }
+    
+    .sidebar-branding { font-weight: 700; font-size: 1.1rem; margin-bottom: 1rem; }
 </style>
 """, unsafe_allow_html=True)
 
