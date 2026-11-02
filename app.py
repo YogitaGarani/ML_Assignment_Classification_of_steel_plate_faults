@@ -140,7 +140,7 @@ if uploaded_file is not None:
                 scaler = joblib.load(scaler_path)
                 model = joblib.load(model_path)
 
-                X_eval_scaled = scaler.transform(X_eval)
+                X_eval_scaled = scaler.transform(X_raw)
                 y_pred = model.predict(X_eval_scaled)
                 y_prob = model.predict_proba(X_eval_scaled)
 
