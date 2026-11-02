@@ -129,10 +129,14 @@ if uploaded_file is not None:
 
 
             with layout_right:
-                st.markdown("<p style='font-weight:600; color:#4B5563; margin-bottom:10px;'>Classification Report</p>", unsafe_allow_html=True)
+                st.markdown("<p style='font-weight:600; color: var(--text-color); margin-bottom: 25px;'>Classification Report</p>", unsafe_allow_html=True)
+                
                 report_dict = classification_report(y_true, y_pred, target_names=target_labels, output_dict=True)
                 report_df = pd.DataFrame(report_dict).transpose()
+                
                 st.dataframe(report_df.style.format(precision=4), use_container_width=True)
+
+
 else:
     st.markdown("<br><br>", unsafe_allow_html=True)
     st.info("💡 Awaiting structural configuration file payload. Please feed or upload a valid csv file with steel pipeline surface data to analyse anomalies")
